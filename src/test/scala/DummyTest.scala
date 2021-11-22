@@ -59,13 +59,13 @@ object KanbanAppTest extends DefaultRunnableSpec {
                 val lines = Vector.fill(n)("") :+ "exit"
 
                 val result =
-                    for {
-                        _ <- TestConsole.clearInput
-                        _ <- TestConsole.clearOutput
-                        _ <- TestConsole.feedLines(lines: _*)
-                        _ <- KanbanApp.launch
-                        lines <- TestConsole.output
-                    } yield lines
+                        (
+                            for {
+                                _ <- TestConsole.feedLines(lines: _*)
+                                _ <- KanbanApp.launch
+                                lines <- TestConsole.output
+                            } yield lines
+                        ).provideLayer(TestConsole.silent)
 
                 def expected =
                     "Welcome to Kanban App!!\n" +:
